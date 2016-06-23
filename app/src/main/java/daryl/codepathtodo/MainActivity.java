@@ -15,6 +15,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import static android.app.Activity.RESULT_OK;
+
 public class MainActivity extends AppCompatActivity {
     private final int REQUEST_CODE = 20;
     ArrayList<String> items;
@@ -40,6 +42,16 @@ public class MainActivity extends AppCompatActivity {
         String itemText = etNewItem.getText().toString();
         itemsAdapter.add(itemText);
         etNewItem.setText("");
+        writeItems();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        String itemText = "";
+        if (resultCode == RESULT_OK && requestCode == REQUEST_CODE) {
+            itemText = data.getExtras().getString("itemText");
+        }
+        itemsAdapter.add(itemText);
         writeItems();
     }
 

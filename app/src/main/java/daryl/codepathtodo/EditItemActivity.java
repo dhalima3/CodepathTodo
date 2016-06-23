@@ -3,6 +3,7 @@ package daryl.codepathtodo;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 
@@ -25,7 +26,6 @@ public class EditItemActivity extends AppCompatActivity {
     public void onSave(View v) {
         Intent data = new Intent();
         data.putExtra("itemText", itemText);
-        data.putExtra("itemPosition", itemPosition);
         setResult(RESULT_OK, data);
         this.finish();
     }
