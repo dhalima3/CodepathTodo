@@ -23,6 +23,10 @@ public class EditItemActivity extends AppCompatActivity {
     }
 
     public void onSave(View v) {
+        Intent data = new Intent();
+        data.putExtra("itemText", itemText);
+        data.putExtra("itemPosition", itemPosition);
+        setResult(RESULT_OK, data);
         this.finish();
     }
 
