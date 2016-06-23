@@ -48,10 +48,13 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         String itemText = "";
+        long itemPosition = 0;
         if (resultCode == RESULT_OK && requestCode == REQUEST_CODE) {
             itemText = data.getExtras().getString("itemText");
+            itemPosition = data.getExtras().getLong("itemPosition");
         }
-        itemsAdapter.add(itemText);
+        items.set((int) itemPosition, itemText);
+        itemsAdapter.notifyDataSetChanged();
         writeItems();
     }
 

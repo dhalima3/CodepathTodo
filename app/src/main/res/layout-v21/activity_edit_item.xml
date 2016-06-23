@@ -32,10 +32,11 @@
         android:layout_marginTop="16dp" />
 
     <Button
-        android:text="Button"
+        android:text="Save"
         android:layout_width="91dp"
         android:layout_height="51dp"
-        android:id="@+id/btnEditItem"
+        android:id="@+id/btnSave"
+        android:onClick="onSave"
         app:layout_constraintLeft_toLeftOf="@+id/activity_edit_item"
         android:layout_marginLeft="16dp"
         android:layout_marginStart="16dp"
