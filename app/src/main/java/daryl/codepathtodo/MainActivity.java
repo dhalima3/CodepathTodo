@@ -1,27 +1,29 @@
 package daryl.codepathtodo;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 
-import org.apache.commons.io.FileUtils;
-
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 
-import static android.app.Activity.RESULT_OK;
+import nl.qbusict.cupboard.QueryResultIterable;
+
+import static nl.qbusict.cupboard.CupboardFactory.cupboard;
 
 public class MainActivity extends AppCompatActivity {
+
     private final int REQUEST_CODE = 20;
     ArrayList<String> items;
     ArrayAdapter<String> itemsAdapter;
     ListView lvItems;
+    private SQLiteDatabase db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +31,10 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         lvItems = (ListView) findViewById(R.id.lvItems);
+        items = new ArrayList<>();
+        TodoDatabaseHelper todoDatabaseHelper = new TodoDatabaseHelper(this);
+        db = todoDatabaseHelper.getWritableDatabase();
+
         readItems();
         itemsAdapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_expandable_list_item_1, items);
@@ -40,9 +46,8 @@ public class MainActivity extends AppCompatActivity {
     public void onAddItem(View v) {
         EditText etNewItem = (EditText) findViewById(R.id.etNewItem);
         String itemText = etNewItem.getText().toString();
-        itemsAdapter.add(itemText);
+        addItem(itemText);
         etNewItem.setText("");
-        writeItems();
     }
 
     @Override
@@ -53,9 +58,7 @@ public class MainActivity extends AppCompatActivity {
             itemText = data.getExtras().getString("itemText");
             itemPosition = data.getExtras().getLong("itemPosition");
         }
-        items.set((int) itemPosition, itemText);
-        itemsAdapter.notifyDataSetChanged();
-        writeItems();
+        putItem(itemText, (int) itemPosition);
     }
 
     private void setupListViewListener() {
@@ -63,9 +66,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position,
                                            long l) {
-                items.remove(position);
-                itemsAdapter.notifyDataSetChanged();
-                writeItems();
+                removeItem(position);
                 return true;
             }
         });
@@ -84,22 +85,37 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void readItems() {
-        File filesDir = getFilesDir();
-        File todoFile = new File(filesDir, "todo.txt");
+        items = new ArrayList<String>();
+        Cursor todos = cupboard().withDatabase(db).query(Todo.class).getCursor();
         try {
-            items = new ArrayList<String>(FileUtils.readLines(todoFile));
-        } catch (IOException e) {
-            items = new ArrayList<String>();
+            QueryResultIterable<Todo> itr = cupboard().withCursor(todos).iterate(Todo.class);
+            for (Todo todo : itr) {
+                items.add(todo.text);
+            }
+        } finally {
+            todos.close();
         }
     }
 
-    private void writeItems() {
-        File filesDir = getFilesDir();
-        File todoFile = new File(filesDir, "todo.txt");
-        try {
-            FileUtils.writeLines(todoFile, items);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    private void addItem(String itemText) {
+        cupboard().withDatabase(db).put(new Todo(itemText));
+        itemsAdapter.add(itemText);
+    }
+
+    private void removeItem(int position) {
+        String todoText = items.remove(position);
+        Todo todoToRemove = cupboard().withDatabase(db).query(Todo.class).
+                withSelection("text = ?", todoText).get();
+        cupboard().withDatabase(db).delete(todoToRemove);
+        itemsAdapter.notifyDataSetChanged();
+    }
+
+    private void putItem(String itemText, int itemPosition) {
+        Todo todo = cupboard().withDatabase(db).query(Todo.class).
+                withSelection("text = ?", items.get(itemPosition)).get();
+        todo.text = itemText;
+        cupboard().withDatabase(db).put(todo);
+        items.set(itemPosition, itemText);
+        itemsAdapter.notifyDataSetChanged();
     }
 }
