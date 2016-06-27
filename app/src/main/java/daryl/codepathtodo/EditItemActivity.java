@@ -1,17 +1,16 @@
 package daryl.codepathtodo;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.EditText;
-
-import static android.R.attr.data;
 
 public class EditItemActivity extends AppCompatActivity {
 
     String itemText;
     long itemPosition;
+    long itemDueDate;
     EditText etNewItem;
 
     @Override
@@ -29,6 +28,7 @@ public class EditItemActivity extends AppCompatActivity {
         Intent data = new Intent();
         data.putExtra("itemText", itemText);
         data.putExtra("itemPosition", itemPosition);
+        data.putExtra("itemDueDate", itemDueDate);
         setResult(RESULT_OK, data);
         this.finish();
     }
@@ -36,6 +36,7 @@ public class EditItemActivity extends AppCompatActivity {
     private void initializeNewItemEditText() {
         itemText = getIntent().getStringExtra("itemText");
         itemPosition = getIntent().getLongExtra("itemPosition", 0);
+        itemDueDate = getIntent().getLongExtra("itemDueDate", 0);
         etNewItem.setText("");
         etNewItem.append(itemText);
     }

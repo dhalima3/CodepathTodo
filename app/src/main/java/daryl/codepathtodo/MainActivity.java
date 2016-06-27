@@ -11,6 +11,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 import nl.qbusict.cupboard.QueryResultIterable;
 
@@ -44,7 +45,8 @@ public class MainActivity extends AppCompatActivity {
     public void onAddItem(View v) {
         EditText etNewItem = (EditText) findViewById(R.id.etNewItem);
         String itemText = etNewItem.getText().toString();
-        addItem(itemText);
+        long itemDueDate = new Date().getTime();
+        addItem(itemText, itemDueDate);
         etNewItem.setText("");
     }
 
@@ -52,11 +54,14 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         String itemText = "";
         long itemPosition = 0;
+        long itemDueDate = 0;
+
         if (resultCode == RESULT_OK && requestCode == REQUEST_CODE) {
             itemText = data.getExtras().getString("itemText");
             itemPosition = data.getExtras().getLong("itemPosition");
+            itemDueDate = data.getExtras().getLong("itemDueDate");
         }
-        putItem(itemText, (int) itemPosition);
+        putItem(itemText, (int) itemPosition, itemDueDate);
     }
 
     private void setupListViewListener() {
@@ -76,8 +81,10 @@ public class MainActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long position) {
                 Intent intent = new Intent(MainActivity.this, EditItemActivity.class);
                 String todoText = arrayOfTodos.get((int) position).text;
+                long dueDate = arrayOfTodos.get((int) position).dueDate;
                 intent.putExtra("itemText", todoText);
                 intent.putExtra("itemPosition", position);
+                intent.putExtra("itemDueDate", dueDate);
                 startActivityForResult(intent, REQUEST_CODE);
             }
         });
@@ -96,8 +103,8 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void addItem(String itemText) {
-        Todo todoToAdd = new Todo(itemText);
+    private void addItem(String itemText, long dueDate) {
+        Todo todoToAdd = new Todo(itemText, dueDate);
         cupboard().withDatabase(db).put(todoToAdd);
         todoAdapter.add(todoToAdd);
     }
@@ -110,10 +117,11 @@ public class MainActivity extends AppCompatActivity {
         todoAdapter.notifyDataSetChanged();
     }
 
-    private void putItem(String itemText, int itemPosition) {
+    private void putItem(String itemText, int itemPosition, long itemDueDate) {
         Todo todo = cupboard().withDatabase(db).query(Todo.class).
                 withSelection("text = ?", arrayOfTodos.get(itemPosition).text).get();
         todo.text = itemText;
+        todo.dueDate = itemDueDate;
         cupboard().withDatabase(db).put(todo);
         arrayOfTodos.set(itemPosition, todo);
         todoAdapter.notifyDataSetChanged();
