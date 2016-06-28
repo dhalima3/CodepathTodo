@@ -11,13 +11,14 @@ import android.widget.ListView;
 
 import java.util.ArrayList;
 
+import daryl.codepathtodo.AddTodoDialogFragment.AddTodoDialogListener;
 import daryl.codepathtodo.EditTodoDialogFragment.EditTodoDialogListener;
 import nl.qbusict.cupboard.QueryResultIterable;
 
 import static nl.qbusict.cupboard.CupboardFactory.cupboard;
 
 public class MainActivity extends AppCompatActivity implements EditTodoDialogListener,
-        AddTodoDialogFragment.AddTodoDialogListener {
+        AddTodoDialogListener {
 
     ArrayList<Todo> arrayOfTodos;
     TodoAdapter todoAdapter;

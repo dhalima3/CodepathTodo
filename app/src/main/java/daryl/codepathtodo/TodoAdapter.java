@@ -39,7 +39,7 @@ public class TodoAdapter extends ArrayAdapter<Todo> {
         }
 
         viewHolder.text.setText(todo.text);
-        viewHolder.dueDate.setText(new SimpleDateFormat("MM/dd/yy").format(new Date(todo.dueDate)));
+        viewHolder.dueDate.setText(new SimpleDateFormat("mm/dd/yy").format(new Date(todo.dueDate)));
         return convertView;
     }
 }
