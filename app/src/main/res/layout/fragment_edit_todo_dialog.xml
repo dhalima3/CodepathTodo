@@ -1,22 +1,15 @@
-<?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/activity_edit_item"
+    android:id="@+id/fragment_edit_todo_dialog"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingLeft="16dp"
-    android:paddingRight="16dp"
-    android:paddingTop="16dp"
-    android:paddingBottom="16dp"
-    tools:context="daryl.codepathtodo.EditItemActivity">
+    android:layout_height="match_parent">
 
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:inputType="textPersonName"
         android:ems="10"
-        android:id="@+id/etNewItem"
+        android:id="@+id/etEditTodoName"
         android:layout_below="@+id/tvEditItem"
         android:layout_alignLeft="@+id/tvEditItem"
         android:layout_alignStart="@+id/tvEditItem" />
@@ -36,9 +29,8 @@
         android:layout_width="90dp"
         android:layout_height="50dp"
         android:id="@+id/btnSave"
-        android:onClick="onSave"
-        android:layout_below="@+id/etNewItem"
-        android:layout_alignLeft="@+id/etNewItem"
-        android:layout_alignStart="@+id/etNewItem" />
+        android:layout_below="@+id/etEditTodoName"
+        android:layout_alignLeft="@+id/etEditTodoName"
+        android:layout_alignStart="@+id/etEditTodoName" />
 
 </RelativeLayout>

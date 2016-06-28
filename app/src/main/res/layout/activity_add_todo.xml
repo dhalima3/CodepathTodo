@@ -9,7 +9,7 @@
     android:paddingRight="16dp"
     android:paddingTop="16dp"
     android:paddingBottom="16dp"
-    tools:context="daryl.codepathtodo.EditItemActivity">
+    tools:context="daryl.codepathtodo.AddTodoActivity">
 
     <EditText
         android:layout_width="wrap_content"

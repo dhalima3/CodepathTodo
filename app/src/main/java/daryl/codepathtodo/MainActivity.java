@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
@@ -11,11 +12,12 @@ import android.widget.ListView;
 
 import java.util.ArrayList;
 
+import daryl.codepathtodo.EditTodoDialogFragment.EditTodoDialogListener;
 import nl.qbusict.cupboard.QueryResultIterable;
 
 import static nl.qbusict.cupboard.CupboardFactory.cupboard;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements EditTodoDialogListener {
 
     private final int EDIT_REQUEST_CODE = 15;
     private final int ADD_REQUEST_CODE = 16;
@@ -80,15 +82,26 @@ public class MainActivity extends AppCompatActivity {
         lvItems.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long position) {
-                Intent intent = new Intent(MainActivity.this, EditItemActivity.class);
                 String todoText = arrayOfTodos.get((int) position).text;
                 long dueDate = arrayOfTodos.get((int) position).dueDate;
-                intent.putExtra("itemText", todoText);
-                intent.putExtra("itemPosition", position);
-                intent.putExtra("itemDueDate", dueDate);
-                startActivityForResult(intent, EDIT_REQUEST_CODE);
+
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                EditTodoDialogFragment editTodoDialogFragment = EditTodoDialogFragment.
+                        newInstance("Edit Todo", todoText, (int) position, dueDate);
+                editTodoDialogFragment.show(fragmentManager, "fragment_edit_todo_dialog");
             }
         });
+    }
+
+    @Override
+    public void onFinishEditTodoDialog(String todoText, int itemPosition, long dueDate) {
+        Todo todo = cupboard().withDatabase(db).query(Todo.class).
+                withSelection("text = ?", arrayOfTodos.get(itemPosition).text).get();
+        todo.text = todoText;
+        todo.dueDate = dueDate;
+        cupboard().withDatabase(db).put(todo);
+        arrayOfTodos.set(itemPosition, todo);
+        todoAdapter.notifyDataSetChanged();
     }
 
     private void readItems() {
