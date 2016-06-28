@@ -1,6 +1,5 @@
 package daryl.codepathtodo;
 
-import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -17,10 +16,9 @@ import nl.qbusict.cupboard.QueryResultIterable;
 
 import static nl.qbusict.cupboard.CupboardFactory.cupboard;
 
-public class MainActivity extends AppCompatActivity implements EditTodoDialogListener {
+public class MainActivity extends AppCompatActivity implements EditTodoDialogListener,
+        AddTodoDialogFragment.AddTodoDialogListener {
 
-    private final int EDIT_REQUEST_CODE = 15;
-    private final int ADD_REQUEST_CODE = 16;
     ArrayList<Todo> arrayOfTodos;
     TodoAdapter todoAdapter;
     ListView lvItems;
@@ -44,27 +42,9 @@ public class MainActivity extends AppCompatActivity implements EditTodoDialogLis
     }
 
     public void onAddItem(View v) {
-        Intent intent = new Intent(MainActivity.this, AddTodoActivity.class);
-        startActivityForResult(intent, ADD_REQUEST_CODE);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        String itemText = "";
-        long itemPosition = 0;
-        long itemDueDate = 0;
-
-        if (resultCode == RESULT_OK) {
-            itemText = data.getExtras().getString("itemText");
-            itemPosition = data.getExtras().getLong("itemPosition");
-            itemDueDate = data.getExtras().getLong("itemDueDate");
-
-            if (requestCode == EDIT_REQUEST_CODE) {
-                putItem(itemText, (int) itemPosition, itemDueDate);
-            } else if (requestCode == ADD_REQUEST_CODE) {
-                addItem(itemText, itemDueDate);
-            }
-        }
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        AddTodoDialogFragment addTodoDialogFragment = AddTodoDialogFragment.newInstance("Add Todo");
+        addTodoDialogFragment.show(fragmentManager, "fragment_add_todo_dialog");
     }
 
     private void setupListViewListener() {
@@ -104,6 +84,13 @@ public class MainActivity extends AppCompatActivity implements EditTodoDialogLis
         todoAdapter.notifyDataSetChanged();
     }
 
+    @Override
+    public void onFinishAddTodoDialog(String todoName, long dueDate) {
+        Todo todoToAdd = new Todo(todoName, dueDate);
+        cupboard().withDatabase(db).put(todoToAdd);
+        todoAdapter.add(todoToAdd);
+    }
+
     private void readItems() {
         arrayOfTodos = new ArrayList<>();
         Cursor todos = cupboard().withDatabase(db).query(Todo.class).getCursor();
@@ -117,27 +104,11 @@ public class MainActivity extends AppCompatActivity implements EditTodoDialogLis
         }
     }
 
-    private void addItem(String itemText, long dueDate) {
-        Todo todoToAdd = new Todo(itemText, dueDate);
-        cupboard().withDatabase(db).put(todoToAdd);
-        todoAdapter.add(todoToAdd);
-    }
-
     private void removeItem(int position) {
         Todo todo = arrayOfTodos.remove(position);
         Todo todoToRemove = cupboard().withDatabase(db).query(Todo.class).
                 withSelection("text = ?", todo.text).get();
         cupboard().withDatabase(db).delete(todoToRemove);
-        todoAdapter.notifyDataSetChanged();
-    }
-
-    private void putItem(String itemText, int itemPosition, long itemDueDate) {
-        Todo todo = cupboard().withDatabase(db).query(Todo.class).
-                withSelection("text = ?", arrayOfTodos.get(itemPosition).text).get();
-        todo.text = itemText;
-        todo.dueDate = itemDueDate;
-        cupboard().withDatabase(db).put(todo);
-        arrayOfTodos.set(itemPosition, todo);
         todoAdapter.notifyDataSetChanged();
     }
 }
