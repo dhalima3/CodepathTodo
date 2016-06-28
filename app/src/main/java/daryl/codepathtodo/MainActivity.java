@@ -7,11 +7,9 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.EditText;
 import android.widget.ListView;
 
 import java.util.ArrayList;
-import java.util.Date;
 
 import nl.qbusict.cupboard.QueryResultIterable;
 
@@ -19,7 +17,8 @@ import static nl.qbusict.cupboard.CupboardFactory.cupboard;
 
 public class MainActivity extends AppCompatActivity {
 
-    private final int REQUEST_CODE = 20;
+    private final int EDIT_REQUEST_CODE = 15;
+    private final int ADD_REQUEST_CODE = 16;
     ArrayList<Todo> arrayOfTodos;
     TodoAdapter todoAdapter;
     ListView lvItems;
@@ -43,11 +42,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onAddItem(View v) {
-        EditText etNewItem = (EditText) findViewById(R.id.etNewItem);
-        String itemText = etNewItem.getText().toString();
-        long itemDueDate = new Date().getTime();
-        addItem(itemText, itemDueDate);
-        etNewItem.setText("");
+        Intent intent = new Intent(MainActivity.this, AddTodoActivity.class);
+        startActivityForResult(intent, ADD_REQUEST_CODE);
     }
 
     @Override
@@ -56,12 +52,17 @@ public class MainActivity extends AppCompatActivity {
         long itemPosition = 0;
         long itemDueDate = 0;
 
-        if (resultCode == RESULT_OK && requestCode == REQUEST_CODE) {
+        if (resultCode == RESULT_OK) {
             itemText = data.getExtras().getString("itemText");
             itemPosition = data.getExtras().getLong("itemPosition");
             itemDueDate = data.getExtras().getLong("itemDueDate");
+
+            if (requestCode == EDIT_REQUEST_CODE) {
+                putItem(itemText, (int) itemPosition, itemDueDate);
+            } else if (requestCode == ADD_REQUEST_CODE) {
+                addItem(itemText, itemDueDate);
+            }
         }
-        putItem(itemText, (int) itemPosition, itemDueDate);
     }
 
     private void setupListViewListener() {
@@ -85,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
                 intent.putExtra("itemText", todoText);
                 intent.putExtra("itemPosition", position);
                 intent.putExtra("itemDueDate", dueDate);
-                startActivityForResult(intent, REQUEST_CODE);
+                startActivityForResult(intent, EDIT_REQUEST_CODE);
             }
         });
     }
