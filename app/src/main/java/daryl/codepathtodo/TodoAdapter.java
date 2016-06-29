@@ -1,6 +1,7 @@
 package daryl.codepathtodo;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -49,10 +50,13 @@ public class TodoAdapter extends ArrayAdapter<Todo> {
     private void setPriorityViewHolder(Todo todo, ViewHolder viewHolder) {
         if (todo.priority == 0) {
             viewHolder.priority.setText("Low");
+            viewHolder.priority.setTextColor(Color.GREEN);
         } else if (todo.priority == 1) {
             viewHolder.priority.setText("Medium");
+            viewHolder.priority.setTextColor(Color.YELLOW);
         } else if (todo.priority == 2) {
             viewHolder.priority.setText("High");
+            viewHolder.priority.setTextColor(Color.RED);
         }
     }
 }

@@ -12,14 +12,13 @@
         android:id="@+id/etAddItemName"
         android:hint="Todo Name" />
 
-    <TextView
+    <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/tvAddTodoDueDate"
-        android:hint="Pick a date"
+        android:hint="Pick a due date"
         android:ems="10"
         android:layout_below="@+id/etAddItemName"
-        android:layout_alignBottom="@+id/btnAddDueDate"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 
