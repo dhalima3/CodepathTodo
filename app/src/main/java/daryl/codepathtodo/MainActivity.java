@@ -65,29 +65,32 @@ public class MainActivity extends AppCompatActivity implements EditTodoDialogLis
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long position) {
                 String todoText = arrayOfTodos.get((int) position).text;
                 long dueDate = arrayOfTodos.get((int) position).dueDate;
+                int priority = arrayOfTodos.get((int) position).priority;
 
                 FragmentManager fragmentManager = getSupportFragmentManager();
                 EditTodoDialogFragment editTodoDialogFragment = EditTodoDialogFragment.
-                        newInstance("Edit Todo", todoText, (int) position, dueDate);
+                        newInstance("Edit Todo", todoText, (int) position, dueDate, priority);
                 editTodoDialogFragment.show(fragmentManager, "fragment_edit_todo_dialog");
             }
         });
     }
 
     @Override
-    public void onFinishEditTodoDialog(String todoText, int itemPosition, long dueDate) {
+    public void onFinishEditTodoDialog(String todoText, int itemPosition, long dueDate,
+                                       int priority) {
         Todo todo = cupboard().withDatabase(db).query(Todo.class).
                 withSelection("text = ?", arrayOfTodos.get(itemPosition).text).get();
         todo.text = todoText;
         todo.dueDate = dueDate;
+        todo.priority = priority;
         cupboard().withDatabase(db).put(todo);
         arrayOfTodos.set(itemPosition, todo);
         todoAdapter.notifyDataSetChanged();
     }
 
     @Override
-    public void onFinishAddTodoDialog(String todoName, long dueDate) {
-        Todo todoToAdd = new Todo(todoName, dueDate);
+    public void onFinishAddTodoDialog(String todoName, long dueDate, int priority) {
+        Todo todoToAdd = new Todo(todoName, dueDate, priority);
         cupboard().withDatabase(db).put(todoToAdd);
         todoAdapter.add(todoToAdd);
     }

@@ -20,4 +20,10 @@
         android:layout_toRightOf="@+id/tvText"
         android:paddingRight="6dp"
         android:text="mm/dd/yy" />
+    <TextView
+        android:id="@+id/tvPriority"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/tvDueDate"
+        android:layout_toRightOf="@+id/tvDueDate" />
 </LinearLayout>

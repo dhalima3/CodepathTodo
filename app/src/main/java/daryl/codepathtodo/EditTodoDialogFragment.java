@@ -9,8 +9,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.codetroopers.betterpickers.calendardatepicker.CalendarDatePickerDialogFragment;
@@ -20,7 +22,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import static android.widget.TextView.OnEditorActionListener;
-import static com.codetroopers.betterpickers.calendardatepicker.CalendarDatePickerDialogFragment.*;
+import static com.codetroopers.betterpickers.calendardatepicker.CalendarDatePickerDialogFragment.OnDateSetListener;
 
 public class EditTodoDialogFragment extends DialogFragment implements
         OnEditorActionListener, OnDateSetListener {
@@ -28,23 +30,27 @@ public class EditTodoDialogFragment extends DialogFragment implements
     private static final String FRAG_TAG_DATE_PICKER = "fragment_date_picker_name";
     private EditText etTodoName;
     private TextView tvEditTodoDueDate;
+    private Spinner spEditPriority;
 
     public EditTodoDialogFragment() {
         // Required empty public constructor
     }
 
     public interface EditTodoDialogListener {
-        void onFinishEditTodoDialog(String todoName, int itemPosition, long dueDate);
+        void onFinishEditTodoDialog(String todoName, int itemPosition, long dueDate,
+                                    int priority);
     }
 
     public static EditTodoDialogFragment newInstance(String title, String todoText,
-                                                     int itemPosition, long dueDate) {
+                                                     int itemPosition, long dueDate,
+                                                     int priority) {
         EditTodoDialogFragment fragment = new EditTodoDialogFragment();
         Bundle args = new Bundle();
         args.putString("title", title);
         args.putString("todoText", todoText);
         args.putInt("itemPosition", itemPosition);
         args.putLong("dueDate", dueDate);
+        args.putInt("priority", priority);
         fragment.setArguments(args);
         return fragment;
     }
@@ -63,6 +69,7 @@ public class EditTodoDialogFragment extends DialogFragment implements
 
         setUpSaveButton(view);
         setUpDatePickerButton(view);
+        setUpPrioritySpinner(view);
 
         String title = getArguments().getString("title", "Enter Name");
         getDialog().setTitle(title);
@@ -91,8 +98,15 @@ public class EditTodoDialogFragment extends DialogFragment implements
         EditTodoDialogListener listener = (EditTodoDialogListener) getActivity();
         int itemPosition = getArguments().getInt("itemPosition");
         listener.onFinishEditTodoDialog(etTodoName.getText().toString(), itemPosition,
-                toSaveDueDate());
+                toSaveDueDate(), spEditPriority.getSelectedItemPosition());
         dismiss();
+    }
+
+    @Override
+    public void onDateSet(CalendarDatePickerDialogFragment dialog, int year, int monthOfYear, int dayOfMonth) {
+
+        tvEditTodoDueDate.setText(getString(R.string.calendar_date_picker_result_values,
+                year, monthOfYear + 1, dayOfMonth));
     }
 
     private long toSaveDueDate() {
@@ -104,13 +118,6 @@ public class EditTodoDialogFragment extends DialogFragment implements
             e.printStackTrace();
         }
         return dueDate;
-    }
-
-    @Override
-    public void onDateSet(CalendarDatePickerDialogFragment dialog, int year, int monthOfYear, int dayOfMonth) {
-
-        tvEditTodoDueDate.setText(getString(R.string.calendar_date_picker_result_values,
-                year, monthOfYear + 1, dayOfMonth));
     }
 
     private void setUpSaveButton(View view) {
@@ -133,5 +140,14 @@ public class EditTodoDialogFragment extends DialogFragment implements
                 cdp.show(getChildFragmentManager(), FRAG_TAG_DATE_PICKER);
             }
         });
+    }
+
+    private void setUpPrioritySpinner(View view) {
+        spEditPriority = (Spinner) view.findViewById(R.id.spEditPriority);
+        ArrayAdapter<CharSequence> spinnerAdapter = ArrayAdapter.createFromResource(getContext(),
+                R.array.priority_array, android.R.layout.simple_spinner_item);
+        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spEditPriority.setAdapter(spinnerAdapter);
+        spEditPriority.setSelection(getArguments().getInt("priority", 1));
     }
 }

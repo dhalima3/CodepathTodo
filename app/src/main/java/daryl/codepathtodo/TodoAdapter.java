@@ -16,6 +16,7 @@ public class TodoAdapter extends ArrayAdapter<Todo> {
     private static class ViewHolder {
         TextView text;
         TextView dueDate;
+        TextView priority;
     }
 
     public TodoAdapter(Context context, ArrayList<Todo> todos) {
@@ -33,6 +34,7 @@ public class TodoAdapter extends ArrayAdapter<Todo> {
             convertView = layoutInflater.inflate(R.layout.item_todo, parent, false);
             viewHolder.text = (TextView) convertView.findViewById(R.id.tvText);
             viewHolder.dueDate = (TextView) convertView.findViewById(R.id.tvDueDate);
+            viewHolder.priority = (TextView) convertView.findViewById(R.id.tvPriority);
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
@@ -40,6 +42,17 @@ public class TodoAdapter extends ArrayAdapter<Todo> {
 
         viewHolder.text.setText(todo.text);
         viewHolder.dueDate.setText(new SimpleDateFormat("mm/dd/yy").format(new Date(todo.dueDate)));
+        setPriorityViewHolder(todo, viewHolder);
         return convertView;
+    }
+
+    private void setPriorityViewHolder(Todo todo, ViewHolder viewHolder) {
+        if (todo.priority == 0) {
+            viewHolder.priority.setText("Low");
+        } else if (todo.priority == 1) {
+            viewHolder.priority.setText("Medium");
+        } else if (todo.priority == 2) {
+            viewHolder.priority.setText("High");
+        }
     }
 }
