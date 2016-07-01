@@ -1,4 +1,4 @@
-package daryl.codepathtodo;
+package daryl.codepathtodo.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -20,31 +20,40 @@ import com.codetroopers.betterpickers.calendardatepicker.CalendarDatePickerDialo
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import daryl.codepathtodo.R;
 
 import static android.widget.TextView.OnEditorActionListener;
 import static com.codetroopers.betterpickers.calendardatepicker.CalendarDatePickerDialogFragment.OnDateSetListener;
 
-
-public class AddTodoDialogFragment extends DialogFragment implements OnEditorActionListener,
-        OnDateSetListener {
+public class EditTodoDialogFragment extends DialogFragment implements
+        OnEditorActionListener, OnDateSetListener {
 
     private static final String FRAG_TAG_DATE_PICKER = "fragment_date_picker_name";
     private EditText etTodoName;
-    private TextView tvAddTodoDueDate;
-    private Spinner spAddPriority;
+    private TextView tvEditTodoDueDate;
+    private Spinner spEditPriority;
 
-    public AddTodoDialogFragment() {
+    public EditTodoDialogFragment() {
         // Required empty public constructor
     }
 
-    public interface AddTodoDialogListener {
-        void onFinishAddTodoDialog(String todoName, long dueDate, int priority);
+    public interface EditTodoDialogListener {
+        void onFinishEditTodoDialog(String todoName, int itemPosition, long dueDate,
+                                    int priority);
     }
 
-    public static AddTodoDialogFragment newInstance(String title) {
-        AddTodoDialogFragment fragment = new AddTodoDialogFragment();
+    public static EditTodoDialogFragment newInstance(String title, String todoText,
+                                                     int itemPosition, long dueDate,
+                                                     int priority) {
+        EditTodoDialogFragment fragment = new EditTodoDialogFragment();
         Bundle args = new Bundle();
         args.putString("title", title);
+        args.putString("todoText", todoText);
+        args.putInt("itemPosition", itemPosition);
+        args.putLong("dueDate", dueDate);
+        args.putInt("priority", priority);
         fragment.setArguments(args);
         return fragment;
     }
@@ -52,15 +61,14 @@ public class AddTodoDialogFragment extends DialogFragment implements OnEditorAct
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_add_todo_dialog, container, false);
+        return inflater.inflate(R.layout.fragment_edit_todo_dialog, container, false);
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        etTodoName = (EditText) view.findViewById(R.id.etAddItemName);
+        etTodoName = (EditText) view.findViewById(R.id.etEditTodoName);
         etTodoName.setOnEditorActionListener(this);
-        tvAddTodoDueDate = (TextView) view.findViewById(R.id.etAddTodoDueDate);
 
         setUpSaveButton(view);
         setUpPrioritySpinner(view);
@@ -69,37 +77,45 @@ public class AddTodoDialogFragment extends DialogFragment implements OnEditorAct
         String title = getArguments().getString("title", "Enter Name");
         getDialog().setTitle(title);
 
+        tvEditTodoDueDate = (TextView) view.findViewById(R.id.etEditTodoDueDate);
+        long todoDueDate = getArguments().getLong("dueDate", 0);
+        tvEditTodoDueDate.setText(new SimpleDateFormat("mm/dd/yy").format(new Date(todoDueDate)));
+
+        String todoText = getArguments().getString("todoText", "");
+        etTodoName.setText(todoText);
         etTodoName.requestFocus();
         getDialog().getWindow().setSoftInputMode(
                 WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
     }
 
     @Override
-    public boolean onEditorAction(TextView textView, int actionId, KeyEvent event) {
+    public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
         if (EditorInfo.IME_ACTION_DONE == actionId) {
-            onAddTodo();
+            onSave();
             return true;
         }
         return false;
     }
 
-    public void onAddTodo() {
-        AddTodoDialogListener listener = (AddTodoDialogListener) getActivity();
-        listener.onFinishAddTodoDialog(etTodoName.getText().toString(), toSaveDueDate(),
-                spAddPriority.getSelectedItemPosition());
+    public void onSave() {
+        EditTodoDialogListener listener = (EditTodoDialogListener) getActivity();
+        int itemPosition = getArguments().getInt("itemPosition");
+        listener.onFinishEditTodoDialog(etTodoName.getText().toString(), itemPosition,
+                toSaveDueDate(), spEditPriority.getSelectedItemPosition());
         dismiss();
     }
 
     @Override
     public void onDateSet(CalendarDatePickerDialogFragment dialog, int year, int monthOfYear, int dayOfMonth) {
-        tvAddTodoDueDate.setText(getString(R.string.calendar_date_picker_result_values,
+
+        tvEditTodoDueDate.setText(getString(R.string.calendar_date_picker_result_values,
                 year, monthOfYear + 1, dayOfMonth));
     }
 
     private long toSaveDueDate() {
         long dueDate = 0;
         try {
-            dueDate = new SimpleDateFormat("mm/dd/yy").parse(tvAddTodoDueDate.getText().
+            dueDate = new SimpleDateFormat("mm/dd/yy").parse(tvEditTodoDueDate.getText().
                     toString()).getTime();
         } catch (ParseException e) {
             e.printStackTrace();
@@ -108,41 +124,42 @@ public class AddTodoDialogFragment extends DialogFragment implements OnEditorAct
     }
 
     private void setUpSaveButton(View view) {
-        Button btnSave = (Button) view.findViewById(R.id.btnAddItem);
+        Button btnSave = (Button) view.findViewById(R.id.btnSave);
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                onAddTodo();
+                onSave();
             }
         });
     }
 
     private void setUpPrioritySpinner(View view) {
-        spAddPriority = (Spinner) view.findViewById(R.id.spAddPriority);
+        spEditPriority = (Spinner) view.findViewById(R.id.spEditPriority);
         ArrayAdapter<CharSequence> spinnerAdapter = ArrayAdapter.createFromResource(getContext(),
                 R.array.priority_array, android.R.layout.simple_spinner_item);
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spAddPriority.setAdapter(spinnerAdapter);
+        spEditPriority.setAdapter(spinnerAdapter);
+        spEditPriority.setSelection(getArguments().getInt("priority", 1));
     }
 
     private void setUpDatePickerEditText(View view) {
-        EditText etAddTodoDueDate = (EditText) view.findViewById(R.id.etAddTodoDueDate);
-        etAddTodoDueDate.setInputType(InputType.TYPE_NULL);
-        etAddTodoDueDate.setOnClickListener(new View.OnClickListener() {
+        EditText etEditTodoDueDate = (EditText) view.findViewById(R.id.etEditTodoDueDate);
+        etEditTodoDueDate.setInputType(InputType.TYPE_NULL);
+        etEditTodoDueDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 CalendarDatePickerDialogFragment cdp = new CalendarDatePickerDialogFragment()
-                        .setOnDateSetListener(AddTodoDialogFragment.this);
+                        .setOnDateSetListener(EditTodoDialogFragment.this);
                 cdp.show(getChildFragmentManager(), FRAG_TAG_DATE_PICKER);
             }
         });
 
-        etAddTodoDueDate.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        etEditTodoDueDate.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean hasFocus) {
                 if (hasFocus) {
                     CalendarDatePickerDialogFragment cdp = new CalendarDatePickerDialogFragment()
-                            .setOnDateSetListener(AddTodoDialogFragment.this);
+                            .setOnDateSetListener(EditTodoDialogFragment.this);
                     cdp.show(getChildFragmentManager(), FRAG_TAG_DATE_PICKER);
                 }
             }

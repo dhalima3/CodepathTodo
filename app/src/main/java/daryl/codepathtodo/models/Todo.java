@@ -1,4 +1,4 @@
-package daryl.codepathtodo;
+package daryl.codepathtodo.models;
 
 public class Todo {
 

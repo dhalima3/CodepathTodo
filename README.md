@@ -27,7 +27,7 @@ The following **additional** features are implemented:
 * [X] FAB
 * [X] Sort items based on due date
 * [X] Splash screen
-* [ ] Organized source files based on (http://guides.codepath.com/android/Organizing-your-Source-Files)
+* [X] Organized source files based on this [guide](http://guides.codepath.com/android/Organizing-your-Source-Files)
 
 ## Video Walkthrough 
 

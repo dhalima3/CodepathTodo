@@ -1,4 +1,4 @@
-package daryl.codepathtodo;
+package daryl.codepathtodo.adapters;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -11,6 +11,9 @@ import android.widget.TextView;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+
+import daryl.codepathtodo.R;
+import daryl.codepathtodo.models.Todo;
 
 public class TodoAdapter extends ArrayAdapter<Todo> {
 

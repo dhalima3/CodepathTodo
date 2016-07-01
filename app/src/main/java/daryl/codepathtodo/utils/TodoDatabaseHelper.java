@@ -1,8 +1,10 @@
-package daryl.codepathtodo;
+package daryl.codepathtodo.utils;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+
+import daryl.codepathtodo.models.Todo;
 
 import static nl.qbusict.cupboard.CupboardFactory.cupboard;
 

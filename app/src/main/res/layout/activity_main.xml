@@ -5,11 +5,11 @@
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="daryl.codepathtodo.MainActivity">
+    tools:context=".activities.MainActivity">
 
     <ListView
-        android:layout_width="352dp"
-        android:layout_height="447dp"
+        android:layout_width="@dimen/activity_main_listview_width"
+        android:layout_height="@dimen/activity_main_listview_height"
         android:id="@+id/lvItems"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
@@ -26,6 +26,6 @@
         android:layout_below="@+id/lvItems"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginRight="10dp"/>
+        android:layout_marginRight="@dimen/activity_main_fab_margin_right"/>
 
 </RelativeLayout>

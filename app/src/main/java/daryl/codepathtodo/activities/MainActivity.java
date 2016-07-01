@@ -1,4 +1,4 @@
-package daryl.codepathtodo;
+package daryl.codepathtodo.activities;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -13,8 +13,14 @@ import android.widget.ListView;
 import java.util.ArrayList;
 import java.util.Comparator;
 
-import daryl.codepathtodo.AddTodoDialogFragment.AddTodoDialogListener;
-import daryl.codepathtodo.EditTodoDialogFragment.EditTodoDialogListener;
+import daryl.codepathtodo.fragments.AddTodoDialogFragment;
+import daryl.codepathtodo.fragments.AddTodoDialogFragment.AddTodoDialogListener;
+import daryl.codepathtodo.fragments.EditTodoDialogFragment;
+import daryl.codepathtodo.fragments.EditTodoDialogFragment.EditTodoDialogListener;
+import daryl.codepathtodo.R;
+import daryl.codepathtodo.models.Todo;
+import daryl.codepathtodo.adapters.TodoAdapter;
+import daryl.codepathtodo.utils.TodoDatabaseHelper;
 import nl.qbusict.cupboard.QueryResultIterable;
 
 import static nl.qbusict.cupboard.CupboardFactory.cupboard;
@@ -96,7 +102,7 @@ public class MainActivity extends AppCompatActivity implements EditTodoDialogLis
     }
 
     private void setUpFabAddTodo() {
-        FloatingActionButton fabAddTodo = (FloatingActionButton) findViewById(R.id.fabAddButton);
+        fabAddTodo = (FloatingActionButton) findViewById(R.id.fabAddButton);
         fabAddTodo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
