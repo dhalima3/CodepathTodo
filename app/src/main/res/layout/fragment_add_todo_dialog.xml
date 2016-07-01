@@ -29,7 +29,8 @@
         android:id="@+id/btnAddDueDate"
         android:layout_below="@+id/etAddItemName"
         android:layout_toRightOf="@+id/tvAddTodoDueDate"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:theme="@style/FinishItButton" />
 
     <Button
         android:text="Add Item"
@@ -38,7 +39,8 @@
         android:id="@+id/btnAddItem"
         android:layout_below="@+id/spAddPriority"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:theme="@style/FinishItButton" />
 
     <Spinner
         android:layout_width="wrap_content"
