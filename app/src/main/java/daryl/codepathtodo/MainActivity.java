@@ -11,6 +11,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 
 import daryl.codepathtodo.AddTodoDialogFragment.AddTodoDialogListener;
 import daryl.codepathtodo.EditTodoDialogFragment.EditTodoDialogListener;
@@ -82,6 +83,7 @@ public class MainActivity extends AppCompatActivity implements EditTodoDialogLis
         todo.priority = priority;
         cupboard().withDatabase(db).put(todo);
         arrayOfTodos.set(itemPosition, todo);
+        sortTodoAdapterByDate();
         todoAdapter.notifyDataSetChanged();
     }
 
@@ -89,6 +91,7 @@ public class MainActivity extends AppCompatActivity implements EditTodoDialogLis
     public void onFinishAddTodoDialog(String todoName, long dueDate, int priority) {
         Todo todoToAdd = new Todo(todoName, dueDate, priority);
         cupboard().withDatabase(db).put(todoToAdd);
+        sortTodoAdapterByDate();
         todoAdapter.add(todoToAdd);
     }
 
@@ -122,6 +125,16 @@ public class MainActivity extends AppCompatActivity implements EditTodoDialogLis
         Todo todoToRemove = cupboard().withDatabase(db).query(Todo.class).
                 withSelection("text = ?", todo.text).get();
         cupboard().withDatabase(db).delete(todoToRemove);
+        sortTodoAdapterByDate();
         todoAdapter.notifyDataSetChanged();
+    }
+
+    private void sortTodoAdapterByDate() {
+        todoAdapter.sort(new Comparator<Todo>() {
+            @Override
+            public int compare(Todo firstTodo, Todo secondTodo) {
+                return firstTodo.dueDate.compareTo(secondTodo.dueDate);
+            }
+        });
     }
 }

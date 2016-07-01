@@ -25,7 +25,7 @@ The following **optional** features are implemented:
 
 The following **additional** features are implemented: 
 * [X] FAB
-* [ ] Sort items based on due date
+* [X] Sort items based on due date
 * [X] Splash screen
 * [ ] Organized source files based on (http://guides.codepath.com/android/Organizing-your-Source-Files)
 
