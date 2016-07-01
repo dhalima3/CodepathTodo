@@ -8,6 +8,10 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="SplashTheme" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:windowBackground">@drawable/splash_screen_background</item>
+    </style>
+
     <style name="FinishItButton" parent="Theme.AppCompat.Light">
         <item name="colorControlHighlight">#F4FF81</item>
         <item name="colorButtonNormal">@color/colorAccent</item>
@@ -17,4 +21,8 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="FinishItEditText" parent="Theme.AppCompat.Light">
+        <item name="colorControlNormal">@color/colorAccent</item>
+        <item name="colorControlActivated">@color/colorAccent</item>
+    </style>
 </resources>

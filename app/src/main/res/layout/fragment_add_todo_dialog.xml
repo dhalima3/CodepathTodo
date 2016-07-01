@@ -20,6 +20,7 @@
             android:layout_height="wrap_content"
             android:inputType="textPersonName"
             android:ems="10"
+            android:theme="@style/FinishItEditText"
             android:id="@+id/etAddItemName"
             android:hint="Todo Name" />
     </LinearLayout>
@@ -42,6 +43,7 @@
             android:id="@+id/etAddTodoDueDate"
             android:hint="Click to pick a due date"
             android:ems="10"
+            android:theme="@style/FinishItEditText"
             android:layout_below="@+id/etAddItemName"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true" />
