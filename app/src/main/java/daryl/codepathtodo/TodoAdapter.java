@@ -49,13 +49,13 @@ public class TodoAdapter extends ArrayAdapter<Todo> {
 
     private void setPriorityViewHolder(Todo todo, ViewHolder viewHolder) {
         if (todo.priority == 0) {
-            viewHolder.priority.setText("Low");
+            viewHolder.priority.setText("LOW");
             viewHolder.priority.setTextColor(Color.GREEN);
         } else if (todo.priority == 1) {
-            viewHolder.priority.setText("Medium");
+            viewHolder.priority.setText("MEDIUM");
             viewHolder.priority.setTextColor(Color.YELLOW);
         } else if (todo.priority == 2) {
-            viewHolder.priority.setText("High");
+            viewHolder.priority.setText("HIGH");
             viewHolder.priority.setTextColor(Color.RED);
         }
     }
