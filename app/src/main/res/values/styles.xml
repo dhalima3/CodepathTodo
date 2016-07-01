@@ -13,4 +13,8 @@
         <item name="colorButtonNormal">@color/colorAccent</item>
     </style>
 
+    <style name="FinishItFAB" parent="Theme.AppCompat.Light">
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
 </resources>

@@ -3,6 +3,7 @@ package daryl.codepathtodo;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -23,6 +24,7 @@ public class MainActivity extends AppCompatActivity implements EditTodoDialogLis
     ArrayList<Todo> arrayOfTodos;
     TodoAdapter todoAdapter;
     ListView lvItems;
+    FloatingActionButton fabAddTodo;
     private SQLiteDatabase db;
 
     @Override
@@ -31,6 +33,7 @@ public class MainActivity extends AppCompatActivity implements EditTodoDialogLis
         setContentView(R.layout.activity_main);
 
         lvItems = (ListView) findViewById(R.id.lvItems);
+        setUpFabAddTodo();
         arrayOfTodos = new ArrayList<>();
         TodoDatabaseHelper todoDatabaseHelper = new TodoDatabaseHelper(this);
         db = todoDatabaseHelper.getWritableDatabase();
@@ -40,12 +43,6 @@ public class MainActivity extends AppCompatActivity implements EditTodoDialogLis
         lvItems.setAdapter(todoAdapter);
         setupListViewListener();
         setupEditItemListener();
-    }
-
-    public void onAddItem(View v) {
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        AddTodoDialogFragment addTodoDialogFragment = AddTodoDialogFragment.newInstance("Add Todo");
-        addTodoDialogFragment.show(fragmentManager, "fragment_add_todo_dialog");
     }
 
     private void setupListViewListener() {
@@ -93,6 +90,18 @@ public class MainActivity extends AppCompatActivity implements EditTodoDialogLis
         Todo todoToAdd = new Todo(todoName, dueDate, priority);
         cupboard().withDatabase(db).put(todoToAdd);
         todoAdapter.add(todoToAdd);
+    }
+
+    private void setUpFabAddTodo() {
+        FloatingActionButton fabAddTodo = (FloatingActionButton) findViewById(R.id.fabAddButton);
+        fabAddTodo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                AddTodoDialogFragment addTodoDialogFragment = AddTodoDialogFragment.newInstance("Add Todo");
+                addTodoDialogFragment.show(fragmentManager, "fragment_add_todo_dialog");
+            }
+        });
     }
 
     private void readItems() {
