@@ -4,50 +4,78 @@
     android:layout_height="match_parent"
     tools:context="daryl.codepathtodo.AddTodoDialogFragment">
 
-    <EditText
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:inputType="textPersonName"
-        android:ems="10"
-        android:id="@+id/etAddItemName"
-        android:hint="Todo Name" />
+        android:id="@+id/rowAddTodoName">
 
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/tvAddTodoDueDate"
-        android:hint="Pick a due date"
-        android:ems="10"
-        android:layout_below="@+id/etAddItemName"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_create_black_18dp"
+            android:paddingTop="12dp" />
 
-    <Button
-        android:text="Pick Due Date"
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="textPersonName"
+            android:ems="10"
+            android:id="@+id/etAddItemName"
+            android:hint="Todo Name" />
+    </LinearLayout>
+
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/btnAddDueDate"
-        android:layout_below="@+id/etAddItemName"
-        android:layout_toRightOf="@+id/tvAddTodoDueDate"
-        android:layout_centerHorizontal="true"
-        android:theme="@style/FinishItButton" />
+        android:id="@+id/rowAddTodoDueDate"
+        android:layout_below="@id/rowAddTodoName">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_date_range_black_18dp"
+            android:paddingTop="12dp" />
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/etAddTodoDueDate"
+            android:hint="Click to pick a due date"
+            android:ems="10"
+            android:layout_below="@+id/etAddItemName"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/rowAddTodoPriority"
+        android:layout_below="@id/rowAddTodoDueDate">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_warning_black_18dp"
+            android:layout_marginTop="3dp" />
+
+        <Spinner
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/spAddPriority"
+            android:layout_below="@+id/etAddTodoDueDate"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+    </LinearLayout>
 
     <Button
         android:text="Add Item"
-        android:layout_width="90dp"
-        android:layout_height="50dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:id="@+id/btnAddItem"
-        android:layout_below="@+id/spAddPriority"
+        android:layout_below="@+id/rowAddTodoPriority"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:theme="@style/FinishItButton" />
-
-    <Spinner
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/spAddPriority"
-        android:layout_below="@+id/tvAddTodoDueDate"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
 
 </RelativeLayout>

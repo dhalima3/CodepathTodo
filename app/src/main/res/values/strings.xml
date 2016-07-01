@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">CodepathTodo</string>
+    <string name="app_name">FinishIt</string>
     <string name="calendar_date_picker_result_values">%2$s/%3$s/%1$s</string>
     <string-array name="priority_array">
         <item>Low</item>
